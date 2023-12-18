@@ -15,9 +15,6 @@ Database storgage system
 """
 
 
-storage_classes = [BaseModel, City, User, State, Place, Review, Amenity]
-
-
 class DBStorage:
     """
     Database storage class
@@ -59,7 +56,7 @@ class DBStorage:
                 for instance in query:
                     key = "{}.{}".format(type(instance).__name__, instance.id)
                     query_dict[key] = instance
-        return (query_dict)
+        return query_dict
 
     def new(self, obj):
         """
