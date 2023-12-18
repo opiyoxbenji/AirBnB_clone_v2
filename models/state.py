@@ -21,9 +21,15 @@ class State(BaseModel, Base):
         """
         def class
         """
-        variable = models.storage.all("City").values()
+        variable = models.storage.all()
         list_city = []
-        for city in variable:
-            if city.state_id == self.id:
-                list_city.append(city)
-        return (list_city)
+        res = []
+        for k in variable:
+            c = k.replace('.', ' ')
+            c = shlex.split(c)
+            if (c[0] == 'City'):
+                list_city.append(variable[k])
+        for var in list_city:
+            if (var.state_id == self.id):
+                res.append(var)
+        return (res)
