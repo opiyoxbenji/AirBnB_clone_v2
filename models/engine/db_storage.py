@@ -46,11 +46,14 @@ class DBStorage:
         """
         query_dict = {}
         if cls:
+            if type(cls) is str:
+                cls = eval(cls)
             query = self.__session.query(cls)
             for instance in query:
                 key = "{}.{}".format(type(instance).__name__, instance.id)
                 query_dict[key] = instance
         else:
+            storage_classes = [State, City, User, Place, Review, Amenity]
             for c in storage_classes:
                 query = self.__session.query(c)
                 for instance in query:
@@ -85,3 +88,9 @@ class DBStorage:
         Session = scoped_session(sessionmaker(bind=self.__engine,
                                               expire_on_commit=False))
         self.__session = Session()
+
+    def close(self):
+        """
+        clsoes session
+        """
+        self.__session.close()
