@@ -20,6 +20,8 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
+        if not kwargs.get('id'):
+            kwargs['id'] = str(uuid.uuid4())
         if not kwargs:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
@@ -27,20 +29,20 @@ class BaseModel:
         else:
             for key, value in kwargs.items():
                 if key != '__class__':
-                    setattr(self, key, value)
-                    if 'updated_at' in kwargs:
-                        kwargs['updated_at'] = datetime.strptime(
-                                kwargs['updated_at'],
-                                '%Y-%m-%dT%H:%M:%S.%f')
-                    if 'created_at' in kwargs:
-                        kwargs['created_at'] = datetime.strptime(
-                                kwargs['created_at'],
-                                '%Y-%m-%dT%H:%M:%S.%f')
+                    if key == 'updated_at' or key == 'created_at':
+                        setattr(self, key, datetime.strptime(
+                             value, '%Y-%m-%dT%H:%M:%S.%f'))
+                    else:
+                        setattr(self, key, value)
 
     def __str__(self):
         """Returns a string representation of the instance"""
-        cls = (str(type(self)).split('.')[-1]).split('\'')[0]
-        return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
+        cls_name = type(self).__name__
+        instance_id = self.id
+        attrs = ', '.join(["{}={}".format(k, repr(v)) for k, v in
+            self.__dict__.items() if k != '_sa_instance_state'])
+        """cls = (str(type(self)).split('.')[-1]).split('\'')[0]"""
+        return '[{}] ({}) {}'.format(cls_name, instance_id, attrs)
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
