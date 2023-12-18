@@ -10,7 +10,6 @@ from models.place import Place
 from models.review import Review
 from models.amenity import Amenity
 from sqlalchemy.ext.declarative import declarative_base
-from models import storage
 """
 Database storgage system
 """
