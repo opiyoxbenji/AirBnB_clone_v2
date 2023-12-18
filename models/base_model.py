@@ -22,10 +22,10 @@ class BaseModel:
         """Instatntiates a new model"""
         if kwargs:
             for key, val in kwargs.items():
-                 if key == 'updated_at' or key == 'created_at':
-                        val = datetime.strptime(val, '%Y-%m-%dT%H:%M:%S.%f')
+                if key == 'updated_at' or key == 'created_at':
+                    val = datetime.strptime(val, '%Y-%m-%dT%H:%M:%S.%f')
                 if key != '__class__':
-                        setattr(self, key, val)
+                    setattr(self, key, val)
             if "id" not in kwargs:
                 self.id = str(uuid.uuid4())
             if "created_at" not in kwargs:
@@ -41,7 +41,8 @@ class BaseModel:
         cls_name = type(self).__name__
         instance_id = self.id
         attrs = ', '.join(["{}={}".format(k, repr(v)) for k, v in
-            self.__dict__.items() if k != '_sa_instance_state'])
+                           self.__dict__.items() if k !=
+                           '_sa_instance_state'])
         """cls = (str(type(self)).split('.')[-1]).split('\'')[0]"""
         return '[{}] ({}) {}'.format(cls_name, instance_id, attrs)
 
