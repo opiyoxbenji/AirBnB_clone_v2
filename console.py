@@ -121,7 +121,7 @@ class HBNBCommand(cmd.Cmd):
                 raise SyntaxError()
             arg_listings = args.split(" ")
             keyword = {}
-            for a in arg_listing[1:]:
+            for a in arg_listings[1:]:
                 arg_s = a.split("=")
                 arg_s[1] = eval(arg_s[1])
                 if isinstance(arg_s[1], str):
@@ -131,7 +131,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         except NameError:
             print("** class doesn't exist **")
-        new_instance = HBNBCommand.classes[arg_list[0]](**keyword)
+        new_instance = HBNBCommand.classes[arg_listings[0]](**keyword)
         new_instance.save()
         print(new_instance.id)
 
