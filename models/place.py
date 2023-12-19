@@ -10,7 +10,7 @@ import shlex
 place_amenity = Table("place_amenity", Base.metadata, Column("place_id",
                       String(60), ForeignKey("places.id"), primary_key=True,
                       nullable=False), Column("amenity_id", String(60),
-                      ForeignKey("amenitites.id"), primary_key=True,
+                      ForeignKey("amenities.id"), primary_key=True,
                       nullable=False))
 
 
@@ -33,7 +33,7 @@ class Place(BaseModel, Base):
                                backref="place")
         amenities = relationship("Amenity", secondary=place_amenity,
                                  viewonly=False,
-                                 Back_populates="place_amenities")
+                                 back_populates="place_amenities")
     else:
         @property
         def reviews(self):
