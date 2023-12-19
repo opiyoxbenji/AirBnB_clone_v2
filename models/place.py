@@ -2,9 +2,19 @@
 """ Place Module for HBNB project """
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, Table, String, Integer, Float, ForeignKey
+from sqlalchemy.orm import relationship
+import os
+import shlex
 
 
-class Place(BaseModel):
+place_amenity = Table("place_amenity", Base.metadata, Column("place_id",
+                      String(60), ForeignKey("places.id"), primary_key=True,
+                      nullable=False), Column("amenity_id", String(60),
+                      ForeignKey("amenitites.id"), primary_key=True,
+                      nullalble=False))
+
+
+class Place(BaseModel, Base):
     """ A place to stay """
     __tablename__ = 'places'
     city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
@@ -18,3 +28,44 @@ class Place(BaseModel):
     latitude = Column(Float)
     longitude = Column(Float)
     amenity_ids = []
+    if os.getenv("HBNB_TYPE_STORAGE") == "db":
+        reviews = relationship("Review", cascade='all, delete, delete-orphan',
+                               backref="place")
+        amenities = relationship("Amenity", secondary=place_amenity,
+                                 viewonly=False,
+                                 Back_populates="place_amenities")
+    else:
+        @property
+        def reviews(self):
+            """
+            return reviews
+            """
+            variable = models.storage.all()
+            review_list = []
+            res = []
+            for k in variable:
+                rev = k.replace('.', ' ')
+                rev = shlex.split(rev)
+                if (rev[0] == 'Review'):
+                    review_list.append(variable[k])
+            for var in review_list:
+                if (var.place_id == self.id):
+                    res.append(var)
+            return (res)
+
+        @property
+        def amenities(self):
+            """
+            return amenities
+            """
+            res = self.amenity_ids
+            return res
+
+        @amenities.setter
+        def amenities(self, obj=None):
+            """
+            add amenities tto id
+            """
+            if obj is not None and isinstance(obj, Amenity) and \
+                    obj.id not in self.amenity_ids:
+                self.amenity_ids.append(obj.id)
