@@ -22,7 +22,7 @@ echo "server {
 	add_header X-Served-By $HOSTNAME;
 	location /hbnb_static {
 		alias /data/web_static/current;
-		index index.html
+		index index.html;
 	}
 	location /redirect_me {
 		return 301 https://www.youtube.com;
