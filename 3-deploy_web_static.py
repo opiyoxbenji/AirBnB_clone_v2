@@ -32,23 +32,21 @@ def do_deploy(archive_path):
     """
     send archive to web servers
     """
-    if not exists(archive_path):
+    if not isfile(archive_path):
         return False
     try:
         put(archive_path, '/tmp/')
-        archive_file = archive_path.split('/')[-1].split('.')[0]
-        run("mkdir -p /data/web_static/releases/{}/".format(archive_file))
-        run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/".format(
-            archive_path.split('/')[-1], archive_file))
-        run("rm /tmp/{}".format(archive_path.split('/')[-1]))
-        run("mv /data/web_static/releases/{}/web_static/* \
-                /data/web_static/releases/{}/".format(
-                    archive_file, archive_file))
-        run("rm -rf /data/web_static/releases/{}/web_static".format(
-            archive_file))
+        archive_file = archive_path.split('/')[-1]
+        extension = archive_file.split(".")[0]
+        path_et = "/data/web_static/releases/{}/".format(extension)
+        run("mkdir -p {}".format(path_et))
+        run("tar -xzf /tmp/{} -C {}".format(
+            archive_file, path_et))
+        run("rm /tmp/{}".format(archive_path))
+        run("mv {}/web_static/* {}".format(path_et, path_et))
+        run("rm -rf {}web_static".format(path_et))
         run("rm -rf /data/web_static/current")
-        run("ln -s /data/web_static/releases/{}/ \
-                /data/web_static/current".format(archive_file))
+        run("ln -s {} /data/web_static/current".format(archive_file))
         return True
     except Exception as e:
         return False
