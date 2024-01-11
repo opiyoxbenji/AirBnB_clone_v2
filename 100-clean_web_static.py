@@ -14,9 +14,15 @@ def do_clean(number=0):
     deletes archives
     """
     number = int(number)
-    number += 1
+    if number == 0 or number == 1:
+        number = 1
+    arch = sorted(os.listdir("versions"))
+    [archs.pop() for num in range(number)]
     with lcd("versions"):
-        local("ls -lt | tail -n +{} | xargs -I {{}} rm {{}}".format(number))
-    releases = run("ls -lt /data/web_static/releases").split('\n')
-    for release in releases:
-        run ("rm -rf /data/web_static/releases/{}".format(release))
+        for dels in arch:
+            local("rm ./{}".format(dels))
+    with cd("/data/web_static/releases"):
+        arch = run("ls -tr").split()
+        arch = [dels for dels in arch if "web_static_" in dels]
+        [arch.pop() for num in range(number)]
+        [run("rm -rf ./{}".format(dels)) for dels in arch]
