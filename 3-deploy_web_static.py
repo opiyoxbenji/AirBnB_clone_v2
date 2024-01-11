@@ -44,6 +44,7 @@ def do_deploy(archive_path):
         run("tar -xzf /tmp/{} -C {}".format(archive_file, release_folder))
         run("rm /tmp/{}".format(archive_file))
         run("mv {}/web_static/* {}".format(release_folder, release_folder))
+        run("rm -rf {}/web_static".format(release_folder))
         run("rm -rf /data/web_static/current")
         run("ln -s {} /data/web_static/current".format(release_folder))
         return True
