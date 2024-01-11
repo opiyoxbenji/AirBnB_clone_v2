@@ -4,7 +4,7 @@ distributes an archive to your web servers, using the function deploy:
 """
 from fabric.api import env, local, run, put
 from datetime import datetime
-from os.path import isfile
+from os.path import isfile, exists
 from os import path
 import os
 
@@ -32,21 +32,23 @@ def do_deploy(archive_path):
     """
     send archive to web servers
     """
-    if not isfile(archive_path):
+    if not exists(archive_path):
         return False
     try:
         put(archive_path, '/tmp/')
-        archive_file = os.path.basename(archive_path)
-        release_folder = "/data/web_static/releases/{}/".format(
-                archive_file[:4]
-        )
-        run("mkdir -p {}".format(release_folder))
-        run("tar -xzf /tmp/{} -C {}".format(archive_file, release_folder))
-        run("rm /tmp/{}".format(archive_file))
-        run("mv {}/web_static/* {}".format(release_folder, release_folder))
-        run("rm -rf {}/web_static".format(release_folder))
+        archive_file = archive_path.split('/')[-1].split('.')[0]
+        run("mkdir -p /data/web_static/releases/{}/".format(archive_file))
+        run("tar -xzf /tmp/{} -C /data/web_static/releases/{}}/".format(
+            archive_path.split('/')[-1], archive_file))
+        run("rm /tmp/{}".format(archive_path.split('/')[-1]))
+        run("mv /data/web_static/releases/{}/web_static/* \
+                /data/web_static/releases/{}/".format(
+                    archive_file, archive_file))
+        run("rm -rf /data/web_static/releases/{}/web_static".format(
+            archive_file))
         run("rm -rf /data/web_static/current")
-        run("ln -s {} /data/web_static/current".format(release_folder))
+        run("ln -s /data/web_static/releases/{}/ \
+                /data/web_static/current".format(archive_file))
         return True
     except Exception as e:
         return False
