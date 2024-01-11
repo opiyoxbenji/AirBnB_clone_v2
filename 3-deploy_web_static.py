@@ -36,10 +36,10 @@ def do_deploy(archive_path):
     if not isfile(archive_path):
         return False
     try:
-        put(archive_path, '/tmp/')
         archive_file = archive_path.split('/')[-1]
         extension = archive_file.split(".")[0]
         path_et = "/data/web_static/releases/{}/".format(extension)
+        put(archive_path, '/tmp/')
         run("mkdir -p {}".format(path_et))
         run("tar -xzf /tmp/{} -C {}".format(
             archive_file, path_et))
