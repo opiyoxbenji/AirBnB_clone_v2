@@ -21,6 +21,7 @@ def do_deploy(archive_path):
                 archive_file[:4]
         )
         put(archive_path, '/tmp/')
+        run("rm -rf {}".format(release_folder))
         run("mkdir -p {}".format(release_folder))
         run("tar -xzf /tmp/{} -C {}".format(archive_file, release_folder))
         run("rm /tmp/{}".format(archive_file))
