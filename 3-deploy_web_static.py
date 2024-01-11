@@ -19,7 +19,7 @@ def do_pack():
     try:
         local("mkdir -p versions")
         now = datetime.now()
-        archive_name = "web_static_{}{}{}{}{}}{}.tgz".format(
+        archive_name = "web_static_{}{}{}{}{}{}.tgz".format(
                 now.year, now.month, now.day, now.hour, now.minute, now.second
         )
         local("tar -cvzf versions/{} web_static".format(archive_name))
@@ -38,7 +38,7 @@ def do_deploy(archive_path):
         put(archive_path, '/tmp/')
         archive_file = archive_path.split('/')[-1].split('.')[0]
         run("mkdir -p /data/web_static/releases/{}/".format(archive_file))
-        run("tar -xzf /tmp/{} -C /data/web_static/releases/{}}/".format(
+        run("tar -xzf /tmp/{} -C /data/web_static/releases/{}/".format(
             archive_path.split('/')[-1], archive_file))
         run("rm /tmp/{}".format(archive_path.split('/')[-1]))
         run("mv /data/web_static/releases/{}/web_static/* \
