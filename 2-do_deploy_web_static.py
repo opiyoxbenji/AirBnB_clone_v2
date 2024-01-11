@@ -16,16 +16,16 @@ def do_deploy(archive_path):
     if not os.path.exists(archive_path):
         return False
     try:
-        put(archive_path, '/tmp/')
         archive_file = os.path.basename(archive_path)
-        release_folder = "/data/web_static/releases/{}".format(
+        release_folder = "/data/web_static/releases/{}/".format(
                 archive_file[:4]
         )
+        put(archive_path, '/tmp/')
         run("mkdir -p {}".format(release_folder))
         run("tar -xzf /tmp/{} -C {}".format(archive_file, release_folder))
         run("rm /tmp/{}".format(archive_file))
         run("mv {}/web_static/* {}".format(release_folder, release_folder))
-        run("rm -rf {}/web_static".format(release_folder))
+        run("rm -rf {}web_static".format(release_folder))
         run("rm -rf /data/web_static/current")
         run("ln -s {} /data/web_static/current".format(release_folder))
         print("New version deployed!")
