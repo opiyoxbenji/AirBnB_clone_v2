@@ -2,7 +2,7 @@
 """
 distributes an archive to your web servers, using the function deploy:
 """
-from fabric.api import env, local, run
+from fabric.api import env, local, run, put
 from datetime import datetime
 from os.path import isfile
 from os import path
@@ -28,7 +28,7 @@ def do_pack():
         return None
 
 
-def deploy():
+def do_deploy(archive_path):
     """
     send archive to web servers
     """
