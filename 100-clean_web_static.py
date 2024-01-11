@@ -13,16 +13,11 @@ def do_clean(number=0):
     """
     deletes archives
     """
-    number = int(number)
     if number == 0 or number == 1:
         number = 1
-    arch = sorted(os.listdir("versions"))
-    [archs.pop() for num in range(number)]
-    with lcd("versions"):
-        for dels in arch:
-            local("rm ./{}".format(dels))
+    with cd.local("./versions"):
+        local("ls -lt | tail -n +{} | rev | cut -f1 -d" " | rev | \
+                xargs -d '\n' rm".format(1 + number))
     with cd("/data/web_static/releases"):
-        arch = run("ls -tr").split()
-        arch = [dels for dels in arch if "web_static_" in dels]
-        [arch.pop() for num in range(number)]
-        [run("rm -rf ./{}".format(dels)) for dels in arch]
+        run("ls -lt | tail -n +{} | rev | cut -f1 -d" " | rev | \
+                xargs -d '\n' rm".format(1 + number))
