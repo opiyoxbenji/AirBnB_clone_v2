@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Starts a Flask web app
+Starts a Flask web app on 0.0.0.0:5000
 Routes:
     / - display “Hello HBNB!”
     /hbnb - display “HBNB”

@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 """
-Starts a flask web app
+Starts a flask web app on 0.0.0.0:5000
 Routes:
     / - display “Hello HBNB!”
     /hbnb - display “HBNB”
-    /c/<text> - display “C ” followed by the value of the text variable 
+    /c/<text> - display “C ” followed by the value of the text variable
 """
 from flask import Flask
 app = Flask(__name__)
